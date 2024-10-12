@@ -18,9 +18,8 @@
     mainList.value = await getAllItems().then(items => items.filter(item => item.pid === indexTree.value[indexTree.value.length - 1] && item.doing === 0))
     doingList.value = await getAllItems().then(items => items.filter(item => item.pid === indexTree.value[indexTree.value.length - 1] && item.doing === 1))
   }
-  
+
   const refreshIndex = async () => {
-    console.log(getHighestId())
     i = await getHighestId() + 1
   }
 
@@ -37,16 +36,24 @@
   
   const deleteTask = async (task) => {
     await deleteItem(task.id)
+    for (let i = 0; i < mainList.value.length; i++) {
+      if (mainList.value[i].pid === task.id) {
+        await deleteItem(mainList.value[i].id)
+      }
+    }
+    currTask.value = {}
     refreshTasks() 
   }
   
   const deeper = async (task) => {
     indexTree.value.push(task.id)
+    currTask.value = {} 
     refreshTasks()
   }
   
   const shallower = async () => {
     indexTree.value.pop()
+    currTask.value = {}
     refreshTasks()  
   }
   
@@ -56,7 +63,8 @@
   
   const changeDescription = async (desc) => {
     currTask.value.desc = desc
-    await addItem(currTask)
+    const taskCopy = { ...currTask.value }
+    await addItem(taskCopy)
     refreshTasks()
   }
   
@@ -106,9 +114,8 @@
 
     <div id="description-div">
       <h1> Description</h1>
-      <TaskDescription v-if="currTask.id != undefined" v-model:task="currTask" @onBlur="changeDescription" 
-      @onDescChanged="getNewDescription"/>
-      <textarea v-else></textarea>
+      <TaskDescription v-if="currTask.id != undefined" v-model:task="currTask" @onInput="changeDescription"/>
+      <textarea v-else readonly></textarea>
     </div>
 
   </div>

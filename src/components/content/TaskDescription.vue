@@ -6,13 +6,13 @@
 
     })
     const emits = defineEmits([
-        "onBlur",
+        "onInput",
         "onDescChanged"
     ])
 
 </script>
 <template>
 
-    <textarea id="description-content" @blur="emits('onBlur', $event.target.value)" :value="task.desc"></textarea>
+    <textarea id="description-content" @input="emits('onInput', $event.target.value)" :value="task.desc"></textarea>
 
 </template>
