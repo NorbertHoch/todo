@@ -8,12 +8,13 @@
     const emits = defineEmits([
         "delete-task",
         "doubleclick",
-        "singleclick"
+        "singleclick",
+        "dragged"
     ])
 
 </script>
 <template>
-    <li>
+    <li draggable="true" @dragstart="emits('dragged', task)">
 
         <p @dblclick="emits('doubleclick', task)" @click="emits('singleclick', task)">
             {{ task.name }}

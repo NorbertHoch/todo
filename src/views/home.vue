@@ -12,6 +12,7 @@
   const indexTree = ref([-1])
   const currTask = ref({})
   const doingList = ref([])
+  const draggedTask = ref({})
   var i = 0
   
   const refreshTasks = async () => {
@@ -96,18 +97,18 @@
   <div id="content">
     <div id="main-list-div">
       <h1>To-Do</h1>
-      <ul id="main-list">
+      <ul id="main-list" @dragover.prevent @drop="markAsDoing(draggedTask)">
         
-        <ListTasks v-for="task in mainList" :task="task" :key="task.id" @delete-task="deleteTask" @doubleclick="deeper" @singleclick="showDescription" @mark-as-doing="markAsDoing"/>
+        <ListTasks v-for="task in mainList" :task="task" :key="task.id" @delete-task="deleteTask" @doubleclick="deeper" @singleclick="showDescription" @mark-as-doing="markAsDoing" @dragged="draggedTask = $event"/>
         
       </ul>
     </div>
 
     <div id="currently-doing-div">
       <h1>Currently Doing</h1>
-      <ul id="currently-doing-list">
+      <ul id="currently-doing-list" @dragover.prevent @drop="markAsDoing(draggedTask)">
         
-        <ListTasks v-for="task in doingList" :task="task" :key="task.id" @delete-task="deleteTask" @doubleclick="deeper" @singleclick="showDescription" @mark-as-doing="markAsDoing"/>
+        <ListTasks v-for="task in doingList" :task="task" :key="task.id" @delete-task="deleteTask" @doubleclick="deeper" @singleclick="showDescription" @mark-as-doing="markAsDoing" @dragged="draggedTask = $event"/>
 
       </ul>
     </div>
